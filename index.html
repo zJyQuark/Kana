@@ -19,7 +19,6 @@
             --error-color: #EF4444;
             --success-color: #10B981;
             --hint-color: #38BDF8;
-            --shadow-color: #7f1d1d; /* Rojo oscuro para el Dojo de Sombras */
         }
 
         body {
@@ -41,37 +40,41 @@
         .slide-up { animation: slideUpFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
         .glass-panel { background: rgba(18, 18, 18, 0.75); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--glass-border); border-radius: 16px; transition: border-color 0.3s, box-shadow 0.3s; }
-        .overlay-screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; z-index: 20; transition: opacity 0.4s ease; background: var(--bg-color); overflow-y: auto; overflow-x: hidden; padding: 40px 20px; }
+        .overlay-screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; z-index: 20; transition: opacity 0.4s ease; background: var(--bg-color); overflow-y: auto; overflow-x: hidden; padding: 30px 20px; }
         .overlay-screen.hidden { opacity: 0; pointer-events: none; }
 
-        .header-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
-        .title-kanji { font-family: 'Noto Sans JP'; font-size: 2.5rem; font-weight: 300; letter-spacing: 15px; margin-bottom: 5px; margin-right: -15px; text-shadow: 0 0 20px rgba(255,255,255,0.1);}
-        .title-sub { font-size: 0.7rem; letter-spacing: 8px; text-transform: uppercase; color: var(--text-muted); transition: color 0.3s; }
+        .header-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 15px; }
+        .title-kanji { font-family: 'Noto Sans JP'; font-size: 2.2rem; font-weight: 300; letter-spacing: 12px; margin-bottom: 2px; margin-right: -12px; text-shadow: 0 0 20px rgba(255,255,255,0.1);}
+        .title-sub { font-size: 0.65rem; letter-spacing: 6px; text-transform: uppercase; color: var(--text-muted); }
 
-        .syllabary-toggle { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; background: var(--surface-color); border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; margin-top: 20px; width: 100%; max-width: 320px; }
-        .toggle-option { text-align: center; font-size: 0.65rem; letter-spacing: 1px; padding: 10px 0; border-radius: 8px; transition: all 0.3s; color: var(--text-muted); text-transform: uppercase; cursor: pointer; touch-action: manipulation;}
+        .syllabary-toggle { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; background: var(--surface-color); border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; margin-top: 15px; width: 100%; max-width: 300px; }
+        .toggle-option { text-align: center; font-size: 0.6rem; letter-spacing: 1px; padding: 8px 0; border-radius: 8px; transition: all 0.3s; color: var(--text-muted); text-transform: uppercase; cursor: pointer; touch-action: manipulation;}
         .toggle-option.active { background: var(--text-main); color: var(--bg-color); font-weight: 600; box-shadow: 0 4px 10px rgba(255,255,255,0.1);}
 
-        .profile-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 25px; }
-        .rank-ring { width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(var(--text-main) calc(var(--progress, 0) * 1%), var(--surface-color) 0); display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
-        .rank-inner { width: 72px; height: 72px; background: var(--bg-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-family: 'Noto Sans JP'; font-size: 1.8rem; }
+        .profile-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        .rank-ring { width: 70px; height: 70px; border-radius: 50%; background: conic-gradient(var(--text-main) calc(var(--progress, 0) * 1%), var(--surface-color) 0); display: flex; justify-content: center; align-items: center; margin-bottom: 8px; }
+        .rank-inner { width: 62px; height: 62px; background: var(--bg-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-family: 'Noto Sans JP'; font-size: 1.5rem; }
+        .name-input { background: transparent; border: none; border-bottom: 1px dashed var(--text-muted); color: var(--text-main); font-family: 'Inter'; font-size: 14px; text-align: center; letter-spacing: 2px; text-transform: uppercase; width: 150px; outline: none; margin-bottom: 4px; }
+        .name-input:focus { border-bottom: 1px solid var(--text-main); }
+        .profile-title { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--hint-color); margin-bottom: 2px; font-weight: 600;}
+        .profile-exp { font-size: 0.8rem; font-weight: 300; letter-spacing: 1px; color: var(--text-muted);}
+
+        .menu-section { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
+        .section-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding-bottom: 3px; border-bottom: 1px solid var(--surface-color); margin-bottom: 3px;}
         
-        .menu-section { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-        .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding-bottom: 5px; border-bottom: 1px solid var(--surface-color); margin-bottom: 5px;}
-        
-        .pill-selector { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .pill-selector { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .pill-selector::-webkit-scrollbar { display: none; }
-        .pill { white-space: nowrap; padding: 10px 14px; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--surface-color); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; touch-action: manipulation; flex-shrink: 0;}
+        .pill { white-space: nowrap; padding: 8px 12px; border-radius: 20px; border: 1px solid var(--glass-border); background: var(--surface-color); color: var(--text-muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s; touch-action: manipulation; flex-shrink: 0;}
         .pill.active { background: var(--text-main); color: var(--bg-color); border-color: var(--text-main); font-weight: 600;}
 
-        #level-hint { height: 16px; font-size: 0.7rem; color: var(--hint-color); text-align: center; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity 0.4s ease; text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);}
+        #level-hint { height: 14px; font-size: 0.65rem; color: var(--hint-color); text-align: center; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity 0.4s ease; }
 
-        .btn { background: transparent; color: var(--text-main); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 14px; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; transition: all 0.2s ease; font-family: 'Inter'; font-weight: 300; width: 100%; touch-action: manipulation;}
+        .btn { background: transparent; color: var(--text-main); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 12px; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; transition: all 0.2s ease; font-family: 'Inter'; font-weight: 300; width: 100%; touch-action: manipulation;}
         .btn:active { transform: scale(0.98); }
         .btn-primary { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.4); }
         .btn-shadow { background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
 
-        /* IN-GAME BASE */
+        /* IN-GAME */
         #top-ui { position: absolute; top: 0; width: 100%; max-width: 600px; padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: opacity 0.5s ease; z-index: 10; pointer-events: none;}
         #top-ui.active { pointer-events: all; }
         .top-controls { display: flex; justify-content: space-between; align-items: center; }
@@ -86,7 +89,6 @@
         .game-panel { position: absolute; opacity: 0; pointer-events: none; transition: opacity 0.3s; width: 90%; max-width: 450px; padding: 40px 20px; display: flex; flex-direction: column; align-items: center;}
         .game-panel.active { opacity: 1; pointer-events: all; z-index: 5;}
 
-        /* TECLEO Y VOCABULARIO */
         #kana-display { font-family: 'Noto Sans JP'; font-size: 6rem; font-weight: 100; margin-bottom: 25px; transition: color 0.2s; text-align: center; line-height: 1.2;}
         .vocab-mode-text { font-size: 3rem !important; letter-spacing: 3px; font-weight: 300;} 
         #time-container { width: 60%; height: 1px; background-color: var(--surface-color); margin: 0 auto 30px auto; overflow: hidden; display: none;}
@@ -96,7 +98,6 @@
         #feedback-message { margin-top: 20px; height: 20px; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity 0.2s; text-align: center;}
         #translation-reveal { font-size: 1.2rem; color: var(--hint-color); margin-top: 15px; letter-spacing: 1px; text-transform: uppercase; font-weight: 300; opacity: 0; transition: opacity 0.3s; text-align: center;}
 
-        /* OPCIÓN MÚLTIPLE Y TÁCTICA */
         .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; margin-top: 20px; }
         .choice-btn { background: var(--surface-color); border: 1px solid var(--glass-border); border-radius: 12px; padding: 20px 10px; font-size: 1.2rem; color: var(--text-main); cursor: pointer; transition: all 0.2s; }
         .choice-btn.correct { background: var(--success-color); border-color: var(--success-color); }
@@ -109,13 +110,15 @@
         .tactical-item.matched { border-color: var(--surface-color); color: var(--surface-color); pointer-events: none; background: transparent; }
         .tactical-item.error { border-color: var(--error-color); color: var(--error-color); animation: shake 0.3s both;}
 
-        /* TRAZOS ZEN */
         .draw-area { position: relative; display: flex; justify-content: center; align-items: center; margin: 10px 0; }
         #zen-canvas { border: 1px solid var(--glass-border); border-radius: 16px; background: rgba(0,0,0,0.3); }
         .zen-watermark { position: absolute; font-size: 8rem; opacity: 0; font-family: 'Noto Sans JP'; color: rgba(255,255,255,0.15); z-index: -1; }
         .eval-badge { position: absolute; top: 10px; right: 10px; font-size: 0.7rem; padding: 4px 8px; border-radius: 8px; opacity: 0; font-weight: 600;}
         .eval-perfect { background: rgba(16, 185, 129, 0.2); color: var(--success-color); border: 1px solid var(--success-color); }
         .eval-fail { background: rgba(239, 68, 68, 0.2); color: var(--error-color); border: 1px solid var(--error-color); }
+
+        .stats-box { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; width: 100%; max-width: 300px; margin-bottom: 25px; display: flex; flex-direction: column; gap: 8px; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+        .stats-row-val { color: var(--text-main); font-weight: 600; float: right; }
     </style>
 </head>
 <body>
@@ -136,7 +139,8 @@
         
         <div class="profile-container slide-up" style="animation-delay: 0.2s;">
             <div class="rank-ring" id="progress-ring"><div class="rank-inner" id="profile-rank-kanji">初</div></div>
-            <div class="profile-title" id="profile-rank-name" style="margin-top: 5px;">Novato</div>
+            <input type="text" id="player-name" class="name-input" value="Jugador" onblur="saveName()" maxlength="12">
+            <div class="profile-title" id="profile-rank-name">Novato</div>
             <div class="profile-exp" id="profile-exp-text">0 Puntos</div>
         </div>
 
@@ -146,18 +150,19 @@
             <div id="level-hint"></div>
             
             <div class="pill-selector" id="mode-pills">
-                <div class="pill active" onclick="selPill('mode', 'mixed', this)">Mixto (Aleatorio)</div>
-                <div class="pill" onclick="selPill('mode', 'choice', this)">Opción Múltiple</div>
-                <div class="pill" onclick="selPill('mode', 'type', this)">Solo Tecleo</div>
-                <div class="pill" onclick="selPill('mode', 'match', this)">Táctica Visual</div>
-                <div class="pill" onclick="selPill('mode', 'draw', this)" id="pill-draw">Trazos Zen</div>
+                <div class="pill active" onclick="selPill('mode', 'mixed', this)">Mixto</div>
+                <div class="pill" onclick="selPill('mode', 'choice', this)">Visual</div>
+                <div class="pill" onclick="selPill('mode', 'type', this)">Tecleo</div>
+                <div class="pill" onclick="selPill('mode', 'match', this)">Táctica</div>
+                <div class="pill" onclick="selPill('mode', 'draw', this)" id="pill-draw">Trazos</div>
+                <div class="pill" onclick="selPill('mode', 'timeattack', this)" style="border-color: var(--hint-color); color: var(--hint-color);">⏱️ 60s Attack</div>
             </div>
             
             <div class="pill-selector" id="timer-pills">
                 <div class="pill active" onclick="selPill('timer', 'on', this)">Reloj ON</div>
                 <div class="pill" onclick="selPill('timer', 'off', this)">Reloj OFF</div>
             </div>
-            <button class="btn" onclick="startFreeMode()" style="margin-top: 10px;">Iniciar Práctica</button>
+            <button class="btn" onclick="startFreeMode()" style="margin-top: 8px;">Iniciar Práctica</button>
         </div>
 
         <div class="menu-section slide-up" style="animation-delay: 0.4s;">
@@ -167,17 +172,16 @@
                 <div class="pill" onclick="selVocab('class', this)">Clases</div>
                 <div class="pill" onclick="selVocab('fantasy', this)">Fantasía</div>
             </div>
-            <button class="btn btn-primary" onclick="startVocabMode()" style="margin-top: 10px;">Iniciar Lectura</button>
+            <button class="btn btn-primary" onclick="startVocabMode()" style="margin-top: 8px;">Iniciar Lectura</button>
         </div>
 
-        <!-- DOJO DE SOMBRAS (NUEVO) -->
         <div class="menu-section slide-up" style="animation-delay: 0.5s;">
             <div class="section-label" style="color: var(--error-color); border-color: rgba(239, 68, 68, 0.2);">Dojo de Sombras</div>
             <button class="btn btn-shadow" onclick="startShadowDojo()" id="btn-shadow">Enfrentar Errores (Némesis)</button>
         </div>
     </div>
 
-    <!-- UI SUPERIOR E IN-GAME -->
+    <!-- UI SUPERIOR -->
     <div id="top-ui">
         <div class="top-controls">
             <button class="text-btn" onclick="goToMainMenu()">← Abandonar</button>
@@ -224,8 +228,18 @@
         </div>
     </div>
 
+    <!-- PANTALLA DE RESULTADOS -->
     <div id="game-over-screen" class="overlay-screen hidden">
-        <div style="font-size: 1.5rem; letter-spacing: 8px; text-transform: uppercase; margin-bottom: 40px; text-align: center;" id="result-title">Análisis</div>
+        <div style="font-size: 1.4rem; letter-spacing: 6px; text-transform: uppercase; margin-bottom: 5px; text-align: center;" id="result-title">Análisis de Sesión</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;" id="result-subtitle">Resumen</div>
+        
+        <div class="stats-box">
+            <div>Aciertos Totales: <span class="stats-row-val" id="stat-hits">0</span></div>
+            <div>Errores: <span class="stats-row-val" id="stat-miss">0</span></div>
+            <div>Precisión: <span class="stats-row-val" id="stat-acc">0%</span></div>
+            <div>Racha Máxima: <span class="stats-row-val" id="stat-streak">0</span></div>
+        </div>
+
         <button class="btn btn-primary" style="max-width: 300px;" onclick="goToMainMenu()">Panel Central</button>
     </div>
 
@@ -233,45 +247,29 @@
         const D = document;
         function vib(type) { if ('vibrate' in navigator) { if(type==='pop') navigator.vibrate(15); else if(type==='error') navigator.vibrate([40,50,40]); else if(type==='success') navigator.vibrate(30); } }
 
-        // --- SISTEMA DE VOZ CORREGIDO (NATIVA Y DESBLOQUEO) ---
-        let audioOn = false;
-        let jpVoice = null;
-
+        // --- SISTEMA DE VOZ ROBUSTO ---
+        let audioOn = false; let jpVoice = null;
         function initVoices() {
             let voices = window.speechSynthesis.getVoices();
-            // Busca voces premium de Google o Siri específicas de Japón
-            jpVoice = voices.find(v => v.lang === 'ja-JP' && (v.name.includes('Kyoko') || v.name.includes('Google') || v.name.includes('Premium'))) || voices.find(v => v.lang.includes('ja'));
+            jpVoice = voices.find(v => v.lang === 'ja-JP' && (v.name.includes('Kyoko') || v.name.includes('Google') || v.name.includes('Premium'))) || voices.find(v => v.lang.includes('ja')) || voices[0];
         }
-        
-        // Escuchar cuando el navegador cargue las voces
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = initVoices;
-        }
+        if (speechSynthesis.onvoiceschanged !== undefined) { speechSynthesis.onvoiceschanged = initVoices; }
 
         function toggleAudio() { 
-            audioOn = !audioOn; 
-            const btn = D.getElementById('audio-btn');
-            btn.textContent = audioOn ? "Voz ON" : "Voz OFF"; 
-            btn.style.color = audioOn ? "var(--text-main)" : "var(--text-muted)";
-            
-            if(audioOn) {
-                initVoices();
-                // TRUCO PARA IOS/ANDROID: Se debe hablar algo inmediatamente en el evento click
-                let unlockUtt = new SpeechSynthesisUtterance("");
-                window.speechSynthesis.speak(unlockUtt);
-                vib('pop');
-            } else {
-                window.speechSynthesis.cancel();
-            }
+            audioOn = !audioOn; const btn = D.getElementById('audio-btn');
+            btn.textContent = audioOn ? "Voz ON" : "Voz OFF"; btn.style.color = audioOn ? "var(--text-main)" : "var(--text-muted)";
+            if(audioOn) { initVoices(); window.speechSynthesis.speak(new SpeechSynthesisUtterance("")); vib('pop'); } 
+            else { window.speechSynthesis.cancel(); }
         }
 
         function playAudio(text) {
             if (!audioOn || !text) return;
+            if (!jpVoice) initVoices(); // Lazy-init de respaldo
             window.speechSynthesis.cancel(); 
             const utt = new SpeechSynthesisUtterance(text); 
-            if(jpVoice) utt.voice = jpVoice; // Asignar la voz nativa bonita
+            if(jpVoice) utt.voice = jpVoice; 
             utt.lang = 'ja-JP'; 
-            utt.rate = isVocab ? 0.85 : 0.95; // Un poco más lento para vocabulario
+            utt.rate = isVocab ? 0.85 : 0.95;
             window.speechSynthesis.speak(utt);
         }
 
@@ -300,7 +298,7 @@
         };
 
         const vocabData = {
-            daily: [{k:'おはよう',r:['ohayou'],t:'Buenos días'},{k:'ありがとう',r:['arigatou'],t:'Gracias'},{k:'すみません',r:['sumimasen'],t:'Disculpe'},{k:'はい',r:['hai'],t:'Sí'},{k:'いいえ',r:['iie'],t:'No'}],
+            daily: [{k:'おはよう',r:['ohayou'],t:'Buenos días'},{k:'ありがとう',r:['arigatou'],t:'Gracias'},{k:'すみません',r:['sumimasen'],t:'Disculpe'},{k:'hai',r:['hai'],t:'Sí'},{k:'いいえ',r:['iie'],t:'No'}],
             class: [{k:'せんせい',r:['sensei'],t:'Profesor'},{k:'がくせい',r:['gakusei'],t:'Estudiante'},{k:'なまえ',r:['namae'],t:'Nombre'},{k:'ほん',r:['hon'],t:'Libro'},{k:'えんぴつ',r:['enpitsu'],t:'Lápiz'},{k:'つくえ',r:['tsukue'],t:'Escritorio'}, {k:'わかりました',r:['wakarimashita'],t:'Entendí'}],
             fantasy: [{k:'けん',r:['ken'],t:'Espada'},{k:'きし',r:['kishi'],t:'Caballero'},{k:'りゅう',r:['ryuu'],t:'Dragón'},{k:'まほう',r:['mahou'],t:'Magia'}]
         };
@@ -310,19 +308,56 @@
             S: { title: '促音', sub: 'Pequeña Tsu' }, N: { title: '数字', sub: 'Números' }, J: { title: '漢字', sub: 'Kanji' }
         };
 
-        let sys = 'H'; let userProfile = { name: "Jugador", exp: 0, nemesisTracking: {} };
-        let activeData = []; let curObj = null; let isVocab = false; let isShadow = false;
+        let sys = 'H'; 
+        let userProfile = { name: "Jugador", exp: 0, nemesisTracking: {} };
+        let activeData = []; let curObj = null; let isVocab = false; let isShadow = false; let isTimeAttack = false;
         let gameCfg = { level: 1, mode: 'mixed', timer: 'on', vocab: 'daily' }; 
-        let cScore = 0; let health = 100; let mistakes = 0; let streak = 0; let tOut; let hintTimeout;
+        
+        let cScore = 0; let totalMiss = 0; let maxStreak = 0; let health = 100; let streak = 0; 
+        let tOut; let timeAttackInterval; let timeRemaining = 60; let hintTimeout;
 
-        // Extraer todos los Kanas para el Dojo de Sombras
         let allKanas = [];
         ['H','K','S','N','J'].forEach(s => { Object.values(db[s]).forEach(arr => allKanas = allKanas.concat(arr)); });
+
+        const rankMilestones = [
+            { name: "Novato", kanji: "初", req: 0, title: "Estudiante de Dojo" }, 
+            { name: "Aprendiz", kanji: "見", req: 150, title: "Caminante del Kana" }, 
+            { name: "Hábil", kanji: "上", req: 400, title: "Exorcista de Némesis" }, 
+            { name: "Experto", kanji: "達", req: 800, title: "Maestro del Sokuon" },
+            { name: "Maestro", kanji: "名", req: 1500, title: "Leyenda del Sol Naciente" },
+            { name: "Leyenda", kanji: "伝", req: 3000, title: "Kami del Nihongo" }
+        ];
+
+        function getCurrentRank() {
+            let current = rankMilestones[0]; let next = rankMilestones[1];
+            for (let i = 0; i < rankMilestones.length; i++) { if (userProfile.exp >= rankMilestones[i].req) { current = rankMilestones[i]; next = rankMilestones[i+1] || current; } }
+            return { current, next };
+        }
+
+        function loadSave() { 
+            const saved = localStorage.getItem('kanaDojoV13'); 
+            if (saved) { userProfile = { ...userProfile, ...JSON.parse(saved) }; if(!userProfile.nemesisTracking) userProfile.nemesisTracking = {}; }
+            D.getElementById('player-name').value = userProfile.name;
+            setSys('H'); updateProfileUI();
+        }
+
+        function saveProgress() { localStorage.setItem('kanaDojoV13', JSON.stringify(userProfile)); updateProfileUI(); checkShadowDojo(); }
+        function saveName() { let val = D.getElementById('player-name').value.trim(); userProfile.name = val === '' ? "Jugador" : val; saveProgress(); }
+
+        function updateProfileUI() {
+            const ranks = getCurrentRank();
+            D.getElementById('profile-rank-kanji').textContent = ranks.current.kanji; 
+            D.getElementById('profile-rank-name').textContent = ranks.current.title;
+            D.getElementById('profile-exp-text').textContent = userProfile.exp + " Puntos";
+            let progress = 100;
+            if (ranks.current !== ranks.next) { progress = Math.min(100, Math.max(0, ((userProfile.exp - ranks.current.req) / (ranks.next.req - ranks.current.req)) * 100)); }
+            D.getElementById('progress-ring').style.setProperty('--progress', progress);
+        }
 
         function checkShadowDojo() {
             const btn = D.getElementById('btn-shadow');
             if(!userProfile.nemesisTracking || Object.keys(userProfile.nemesisTracking).length === 0) {
-                btn.style.opacity = '0.5'; btn.textContent = "Dojo Vacío (Juega para llenarlo)";
+                btn.style.opacity = '0.4'; btn.textContent = "Dojo Vacío (Juega para llenarlo)";
             } else {
                 btn.style.opacity = '1'; btn.textContent = "Enfrentar Errores (Némesis)";
             }
@@ -357,11 +392,9 @@
             populateLevelPills(); checkShadowDojo(); vib('pop');
         }
 
-        function loadSave() { const saved = localStorage.getItem('kanaDojoV12'); if (saved) { userProfile = { ...userProfile, ...JSON.parse(saved) }; if(!userProfile.nemesisTracking) userProfile.nemesisTracking = {};} setSys('H'); }
-        function saveProgress() { localStorage.setItem('kanaDojoV12', JSON.stringify(userProfile)); checkShadowDojo(); }
-
         function startFreeMode() {
-            isVocab = false; isShadow = false; let lvl = parseInt(gameCfg.level);
+            isVocab = false; isShadow = false; isTimeAttack = (gameCfg.mode === 'timeattack');
+            let lvl = parseInt(gameCfg.level);
             let lvls = (sys==='H'||sys==='K') ? (lvl===4?[1,2,3]:[lvl]) : [lvl];
             let data = []; lvls.forEach(l => { if(db[sys][l]) data = data.concat(db[sys][l]); });
             activeData = JSON.parse(JSON.stringify(data)).map(k => ({...k, weight: 10}));
@@ -369,50 +402,52 @@
         }
 
         function startVocabMode() {
-            isVocab = true; isShadow = false; activeData = JSON.parse(JSON.stringify(vocabData[gameCfg.vocab])).map(k => ({...k, weight: 10}));
+            isVocab = true; isShadow = false; isTimeAttack = false;
+            activeData = JSON.parse(JSON.stringify(vocabData[gameCfg.vocab])).map(k => ({...k, weight: 10}));
             gameCfg.mode = 'type'; gameCfg.timer = 'off'; 
             initGame();
         }
 
-        // --- NUEVA FUNCIÓN: DOJO DE SOMBRAS ---
         function startShadowDojo() {
             let nemesisKeys = Object.keys(userProfile.nemesisTracking || {});
-            if(nemesisKeys.length === 0) return; // Vacío
-            
+            if(nemesisKeys.length === 0) return;
             let data = [];
             nemesisKeys.forEach(k => {
                 let found = allKanas.find(obj => obj.k === k);
-                if(found) {
-                    let weightObj = JSON.parse(JSON.stringify(found));
-                    // Aumentar la probabilidad basada en cuántas veces fallaste
-                    weightObj.weight = (userProfile.nemesisTracking[k] * 10) + 10; 
-                    data.push(weightObj);
-                }
+                if(found) { let w = JSON.parse(JSON.stringify(found)); w.weight = (userProfile.nemesisTracking[k] * 10) + 10; data.push(w); }
             });
-            
             if(data.length === 0) return;
-            isVocab = false; isShadow = true; 
-            gameCfg.mode = 'mixed'; gameCfg.timer = 'on'; // Modo estricto
-            activeData = data;
-            
-            D.getElementById('left-stat-label').innerHTML = `Redención <span class="stat-value" id="score-display">0</span>`;
-            initGame();
+            isVocab = false; isShadow = true; isTimeAttack = false;
+            gameCfg.mode = 'mixed'; gameCfg.timer = 'on'; 
+            activeData = data; initGame();
         }
 
         function initGame() {
             if(activeData.length === 0) return;
-            cScore = 0; health = 100; streak = 0; updateInGameUI();
+            cScore = 0; totalMiss = 0; maxStreak = 0; health = 100; streak = 0; updateInGameUI();
             D.getElementById('start-screen').classList.add('hidden'); D.getElementById('top-ui').classList.add('active'); D.getElementById('top-ui').style.opacity = '1';
             
-            // Efecto visual si es Shadow Dojo
-            D.getElementById('health-bar').style.backgroundColor = isShadow ? 'var(--error-color)' : 'var(--text-main)';
+            if (isTimeAttack) {
+                timeRemaining = 60;
+                D.getElementById('health-container').style.display = 'none';
+                clearInterval(timeAttackInterval);
+                timeAttackInterval = setInterval(() => {
+                    timeRemaining--;
+                    D.getElementById('left-stat-label').innerHTML = `⏱️ Tiempo <span class="stat-value">${timeRemaining}s</span>`;
+                    if(timeRemaining <= 0) { clearInterval(timeAttackInterval); triggerAnalytics(); }
+                }, 1000);
+            } else {
+                D.getElementById('health-container').style.display = 'block';
+                D.getElementById('health-bar').style.backgroundColor = isShadow ? 'var(--error-color)' : 'var(--text-main)';
+            }
             routeMode();
         }
 
         function routeMode() {
             D.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active', 'slide-up'));
             let panel;
-            if (gameCfg.mode === 'draw' && sys !== 'S') { panel = D.getElementById('draw-container'); startDraw(); }
+            if (isTimeAttack) { panel = D.getElementById('typing-container'); switchType(); }
+            else if (gameCfg.mode === 'draw' && sys !== 'S') { panel = D.getElementById('draw-container'); startDraw(); }
             else if (gameCfg.mode === 'choice') { panel = D.getElementById('choice-container'); startChoice(); }
             else if (gameCfg.mode === 'match') { panel = D.getElementById('tactical-container'); startTac(); }
             else if (gameCfg.mode === 'mixed') {
@@ -425,7 +460,8 @@
         }
 
         function goToMainMenu() {
-            clearTimeout(tOut); D.getElementById('game-over-screen').classList.add('hidden');
+            clearTimeout(tOut); clearInterval(timeAttackInterval);
+            D.getElementById('game-over-screen').classList.add('hidden');
             D.getElementById('top-ui').classList.remove('active'); D.getElementById('top-ui').style.opacity = '0'; 
             D.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
             setTimeout(() => D.getElementById('start-screen').classList.remove('hidden'), 300); vib('pop');
@@ -433,12 +469,13 @@
         }
 
         function updateInGameUI() {
-            D.getElementById('score-display').textContent = cScore;
+            if(!isTimeAttack) D.getElementById('left-stat-label').innerHTML = `Aciertos <span class="stat-value" id="score-display">${cScore}</span>`;
             const hb = D.getElementById('health-bar'); hb.style.width = health + '%';
-            if(!isShadow) hb.style.backgroundColor = health > 50 ? 'var(--text-main)' : health > 20 ? 'var(--hint-color)' : 'var(--error-color)';
+            if(!isShadow && !isTimeAttack) hb.style.backgroundColor = health > 50 ? 'var(--text-main)' : health > 20 ? 'var(--hint-color)' : 'var(--error-color)';
         }
 
         function applyPunishment() { 
+            totalMiss++;
             if(curObj) { 
                 curObj.weight += 15; 
                 if(!userProfile.nemesisTracking) userProfile.nemesisTracking = {};
@@ -447,7 +484,6 @@
             } 
         }
 
-        // Si aciertas en Shadow Dojo, remueves el error (Curación)
         function applyHeal() {
             if(isShadow && curObj && userProfile.nemesisTracking[curObj.k]) {
                 userProfile.nemesisTracking[curObj.k]--;
@@ -461,10 +497,10 @@
         function triggerShake(elId) { const c = D.getElementById(elId); c.classList.remove('shake-effect'); void c.offsetWidth; c.classList.add('shake-effect'); setTimeout(() => c.classList.remove('shake-effect'), 300); }
 
         function startTimer(containerId, nextFunc) {
-            clearTimeout(tOut); if (gameCfg.timer === 'off') return;
+            clearTimeout(tOut); if (gameCfg.timer === 'off' || isTimeAttack) return;
             const tb = D.getElementById(containerId === 'typing-container' ? 'time-bar' : 'choice-time-bar');
             tb.style.transition = 'none'; tb.style.width = '100%'; void tb.offsetWidth; tb.style.transition = `width 3500ms linear`; tb.style.width = '0%';
-            tOut = setTimeout(() => { health = Math.max(0, health - 20); streak = 0; applyPunishment(); triggerShake(containerId); updateInGameUI(); vib('error'); if(health===0) goToMainMenu(); else nextFunc(); }, 3500);
+            tOut = setTimeout(() => { health = Math.max(0, health - 20); streak = 0; applyPunishment(); triggerShake(containerId); updateInGameUI(); vib('error'); if(health<=0) triggerAnalytics(); else nextFunc(); }, 3500);
         }
 
         function switchType() { 
@@ -472,7 +508,7 @@
             const kD = D.getElementById('kana-display'); kD.textContent = curObj.k; 
             if(isVocab || sys === 'S') kD.classList.add('vocab-mode-text'); else kD.classList.remove('vocab-mode-text');
             D.getElementById('romaji-input').value = ''; D.getElementById('feedback-message').style.opacity = '0';
-            D.getElementById('translation-reveal').style.opacity = '0'; D.getElementById('time-container').style.display = gameCfg.timer==='on' ? 'block' : 'none'; 
+            D.getElementById('translation-reveal').style.opacity = '0'; D.getElementById('time-container').style.display = (gameCfg.timer==='on' && !isTimeAttack) ? 'block' : 'none'; 
             playAudio(curObj.k);
             startTimer('typing-container', switchType); 
         }
@@ -481,20 +517,91 @@
             if (e.key === 'Enter') { 
                 const ans = this.value.trim().toLowerCase(); 
                 if(curObj.r.includes(ans)) { 
-                    clearTimeout(tOut); vib('success'); cScore++; health = Math.min(100, health+2); streak++; triggerPop('kana-display'); applyHeal();
-                    updateInGameUI();
-                    if(curObj.t) { const tr = D.getElementById('translation-reveal'); tr.textContent = curObj.t; tr.style.opacity = '1'; setTimeout(routeMode, 1500); } else { setTimeout(routeMode, 200); }
+                    clearTimeout(tOut); vib('success'); cScore++; health = Math.min(100, health+2); streak++; 
+                    if(streak > maxStreak) maxStreak = streak;
+                    triggerPop('kana-display'); applyHeal(); updateInGameUI();
+                    
+                    userProfile.exp += 5; saveProgress();
+
+                    if(curObj.t) { const tr = D.getElementById('translation-reveal'); tr.textContent = curObj.t; tr.style.opacity = '1'; setTimeout(routeMode, 1500); } 
+                    else { setTimeout(routeMode, 200); }
                 } else { 
                     vib('error'); health = Math.max(0, health-20); streak=0; applyPunishment(); triggerShake('typing-container'); this.value=''; 
                     const fm = D.getElementById('feedback-message'); fm.style.opacity = '1'; fm.textContent = 'Error de Trazo'; fm.style.color = 'var(--error-color)';
-                    updateInGameUI(); if(health===0) goToMainMenu();
+                    updateInGameUI(); if(health<=0 && !isTimeAttack) triggerAnalytics();
                 } 
             } 
         });
 
-        function startChoice() { curObj = getWRK(); D.getElementById('choice-kana-display').textContent = curObj.k; playAudio(curObj.k); let pool = [...activeData].filter(x => x.k !== curObj.k).sort(()=>0.5-Math.random()).slice(0,3); pool.push(curObj); pool.sort(()=>0.5-Math.random()); const g = D.getElementById('choice-grid'); g.innerHTML=''; pool.forEach(o => { let b = D.createElement('button'); b.className='choice-btn'; b.textContent = (o.t && sys!=='H' && sys!=='K') ? o.t : o.r[0]; b.onclick = () => { if(o.k === curObj.k) { vib('success'); b.classList.add('correct'); applyHeal(); cScore++; health=Math.min(100,health+2); setTimeout(routeMode,400); } else { vib('error'); b.classList.add('wrong'); applyPunishment(); health=Math.max(0,health-20); setTimeout(routeMode,800); } updateInGameUI(); }; g.appendChild(b); }); startTimer('choice-container', startChoice); }
+        function startChoice() { 
+            curObj = getWRK(); 
+            D.getElementById('choice-kana-display').textContent = curObj.k; 
+            playAudio(curObj.k); 
+            let pool = [...activeData].filter(x => x.k !== curObj.k).sort(()=>0.5-Math.random()).slice(0,3); 
+            pool.push(curObj); 
+            pool.sort(()=>0.5-Math.random()); 
+            const g = D.getElementById('choice-grid'); 
+            g.innerHTML=''; 
+            pool.forEach(o => { 
+                let b = D.createElement('button'); 
+                b.className='choice-btn'; 
+                b.textContent = (o.t && sys!=='H' && sys!=='K') ? o.t : o.r[0]; 
+                b.onclick = () => { 
+                    clearTimeout(tOut);
+                    if(o.k === curObj.k) { 
+                        vib('success'); b.classList.add('correct'); applyHeal(); cScore++; streak++; 
+                        if(streak>maxStreak) maxStreak=streak; 
+                        health = Math.min(100, health+2); 
+                        userProfile.exp += 5; saveProgress(); 
+                        setTimeout(routeMode, 400); 
+                    } else { 
+                        vib('error'); b.classList.add('wrong'); applyPunishment(); 
+                        health = Math.max(0, health-20); streak=0; 
+                        updateInGameUI();
+                        if(health <= 0) { setTimeout(triggerAnalytics, 400); return; }
+                        setTimeout(routeMode, 800); 
+                    } 
+                    updateInGameUI(); 
+                }; 
+                g.appendChild(b); 
+            }); 
+            startTimer('choice-container', startChoice); 
+        }
         
-        function startTac() { const cK = D.getElementById('col-kanas'); const cR = D.getElementById('col-romajis'); cK.innerHTML=''; cR.innerHTML=''; let tArr = [...activeData].sort(()=>0.5-Math.random()).slice(0,4); let nK=[]; let nR=[]; let mDone = 0; let sK=null; let sR=null; tArr.forEach((p,i) => { let k = D.createElement('div'); k.className='tactical-item'; k.textContent=p.k; k.onclick=function(){D.querySelectorAll('#col-kanas .tactical-item').forEach(e=>e.classList.remove('selected')); k.classList.add('selected'); playAudio(p.k); vib('pop'); sK={n:k,id:i}; chk();}; nK.push(k); let r = D.createElement('div'); r.className='tactical-item'; r.textContent=p.r[0]; r.onclick=function(){D.querySelectorAll('#col-romajis .tactical-item').forEach(e=>e.classList.remove('selected')); r.classList.add('selected'); vib('pop'); sR={n:r,id:i}; chk();}; nR.push(r); }); nK.sort(()=>0.5-Math.random()).forEach(n=>cK.appendChild(n)); nR.sort(()=>0.5-Math.random()).forEach(n=>cR.appendChild(n)); function chk(){ if(sK&&sR){ if(sK.id===sR.id){ vib('success'); sK.n.classList.replace('selected','matched'); sR.n.classList.replace('selected','matched'); applyHeal(); cScore++; mDone++; if(mDone===4) setTimeout(routeMode,600); } else { vib('error'); sK.n.classList.replace('selected','error'); sR.n.classList.replace('selected','error'); applyPunishment(); health-=10; triggerShake('tactical-container'); setTimeout(()=>{sK.n.classList.remove('error');sR.n.classList.remove('error');},400); } updateInGameUI(); sK=null; sR=null; } } }
+        function startTac() { 
+            const cK = D.getElementById('col-kanas'); const cR = D.getElementById('col-romajis'); 
+            cK.innerHTML=''; cR.innerHTML=''; 
+            let tArr = [...activeData].sort(()=>0.5-Math.random()).slice(0,4); 
+            let nK=[]; let nR=[]; let mDone = 0; let sK=null; let sR=null; 
+            tArr.forEach((p,i) => { 
+                let k = D.createElement('div'); k.className='tactical-item'; k.textContent=p.k; 
+                k.onclick=function(){D.querySelectorAll('#col-kanas .tactical-item').forEach(e=>e.classList.remove('selected')); k.classList.add('selected'); playAudio(p.k); vib('pop'); sK={n:k,id:i}; chk();}; 
+                nK.push(k); 
+                let r = D.createElement('div'); r.className='tactical-item'; r.textContent=p.r[0]; 
+                r.onclick=function(){D.querySelectorAll('#col-romajis .tactical-item').forEach(e=>e.classList.remove('selected')); r.classList.add('selected'); vib('pop'); sR={n:r,id:i}; chk();}; 
+                nR.push(r); 
+            }); 
+            nK.sort(()=>0.5-Math.random()).forEach(n=>cK.appendChild(n)); 
+            nR.sort(()=>0.5-Math.random()).forEach(n=>cR.appendChild(n)); 
+            
+            function chk(){ 
+                if(sK && sR){ 
+                    if(sK.id === sR.id){ 
+                        vib('success'); sK.n.classList.replace('selected','matched'); sR.n.classList.replace('selected','matched'); 
+                        applyHeal(); cScore++; streak++; if(streak>maxStreak)maxStreak=streak; 
+                        userProfile.exp+=10; saveProgress(); mDone++; 
+                        if(mDone===4) setTimeout(routeMode,600); 
+                    } else { 
+                        vib('error'); sK.n.classList.replace('selected','error'); sR.n.classList.replace('selected','error'); 
+                        applyPunishment(); health-=10; streak=0; triggerShake('tactical-container'); 
+                        updateInGameUI();
+                        if(health <= 0) { setTimeout(triggerAnalytics, 400); return; }
+                        setTimeout(()=>{sK.n.classList.remove('error');sR.n.classList.remove('error');},400); 
+                    } 
+                    updateInGameUI(); sK=null; sR=null; 
+                } 
+            } 
+        }
         
         // CANVAS ZEN
         const canvas = D.getElementById('zen-canvas'); const ctx = canvas.getContext('2d'); let isDrawing = false;
@@ -504,9 +611,29 @@
         canvas.addEventListener('mousedown', startPosition); canvas.addEventListener('mouseup', endPosition); canvas.addEventListener('mousemove', draw); canvas.addEventListener('touchstart', startPosition, {passive: false}); canvas.addEventListener('touchend', endPosition, {passive: false}); canvas.addEventListener('touchmove', draw, {passive: false});
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.beginPath(); vib('pop');}
         function startDraw() { ctx.lineWidth = 14; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#FFFFFF'; clearCanvas(); curObj = getWRK(); D.getElementById('draw-prompt').textContent = curObj.r[0]; D.getElementById('draw-watermark').textContent = curObj.k; D.getElementById('draw-watermark').style.opacity = '0'; D.getElementById('zen-eval-badge').style.opacity = '0'; D.getElementById('draw-actions').style.display = 'flex'; }
-        function autoAnalyzeDraw() { playAudio(curObj.k); D.getElementById('draw-actions').style.display = 'none'; D.getElementById('draw-watermark').style.opacity = '0.3'; const badge = D.getElementById('zen-eval-badge'); badge.textContent = "¡Perfecto!"; badge.className = "eval-badge eval-perfect"; badge.style.opacity = '1'; vib('success'); applyHeal(); cScore++; health = Math.min(100, health + 5); triggerPop('zen-canvas'); updateInGameUI(); setTimeout(routeMode, 1500); }
+        function autoAnalyzeDraw() { playAudio(curObj.k); D.getElementById('draw-actions').style.display = 'none'; D.getElementById('draw-watermark').style.opacity = '0.3'; const badge = D.getElementById('zen-eval-badge'); badge.textContent = "¡Perfecto!"; badge.className = "eval-badge eval-perfect"; badge.style.opacity = '1'; vib('success'); applyHeal(); cScore++; streak++; if(streak>maxStreak)maxStreak=streak; health = Math.min(100, health + 5); userProfile.exp += 15; saveProgress(); triggerPop('zen-canvas'); updateInGameUI(); setTimeout(routeMode, 1500); }
+
+        function triggerAnalytics() {
+            clearTimeout(tOut); clearInterval(timeAttackInterval);
+            let totalTries = cScore + totalMiss;
+            let accuracy = totalTries > 0 ? Math.round((cScore / totalTries) * 100) : 0;
+
+            D.getElementById('stat-hits').textContent = cScore;
+            D.getElementById('stat-miss').textContent = totalMiss;
+            D.getElementById('stat-acc').textContent = accuracy + "%";
+            D.getElementById('stat-streak').textContent = maxStreak;
+
+            D.getElementById('game-over-screen').classList.remove('hidden');
+            D.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+            D.getElementById('top-ui').classList.remove('active');
+        }
 
         loadSave();
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
+        }
     </script>
 </body>
 </html>
