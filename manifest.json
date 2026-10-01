@@ -1,0 +1,15 @@
+{
+  "name": "Kana Dojo Pro",
+  "short_name": "Dojo",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#030303",
+  "theme_color": "#030303",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

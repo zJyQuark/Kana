@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <!-- Fondo oscuro minimalista con bordes redondeados (estilo app) -->
+    <rect width="512" height="512" rx="115" fill="#050505"/>
+    
+    <!-- Anillo exterior sutil -->
+    <circle cx="256" cy="256" r="190" fill="none" stroke="#333333" stroke-width="4"/>
+    
+    <!-- Anillo interior brillante -->
+    <circle cx="256" cy="256" r="175" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.7"/>
+    
+    <!-- Kanji Central "Dō" (Camino/Dojo) -->
+    <text x="256" y="340" font-family="-apple-system, BlinkMacSystemFont, 'Noto Sans JP', sans-serif" font-weight="100" font-size="240" fill="#FFFFFF" text-anchor="middle">道</text>
+</svg>

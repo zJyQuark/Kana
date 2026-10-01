@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kana Dojo - N5 Bridge Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400&family=Inter:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #030303;
+            --surface-color: #121212;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #FFFFFF;
+            --text-muted: #666666;
+            --error-color: #EF4444;
+            --success-color: #10B981;
+            --hint-color: #EAB308;
+        }
+
+        body {
+            background-color: var(--bg-color); color: var(--text-main);
+            font-family: 'Inter', sans-serif; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; height: 100vh; margin: 0; 
+            overflow: hidden; position: relative; user-select: none;
+        }
+
+        /* --- ANIMACIONES GAME FEEL --- */
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(4px); } }
+        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .shake-effect { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both; border-color: rgba(239, 68, 68, 0.5) !important; box-shadow: 0 0 20px rgba(239, 68, 68, 0.2); }
+        .pop-effect { animation: pop 0.2s ease-out both; }
+
+        .glass-panel { background: rgba(18, 18, 18, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); border-radius: 12px; transition: border-color 0.3s, box-shadow 0.3s; }
+        .overlay-screen { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; z-index: 20; transition: opacity 0.4s ease; background: var(--bg-color); overflow-y: auto; padding: 40px 20px; }
+        .overlay-screen.hidden { opacity: 0; pointer-events: none; }
+
+        /* --- TÍTULOS E INTERRUPTOR DE 4 VÍAS --- */
+        .header-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        .title-kanji { font-family: 'Noto Sans JP'; font-size: 2.5rem; font-weight: 300; letter-spacing: 15px; margin-bottom: 5px; margin-right: -15px; }
+        .title-sub { font-size: 0.7rem; letter-spacing: 8px; text-transform: uppercase; color: var(--text-muted); transition: color 0.3s; }
+
+        .syllabary-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; background: var(--surface-color); border: 1px solid var(--glass-border); border-radius: 12px; padding: 6px; margin-top: 20px; width: 280px; }
+        .toggle-option { text-align: center; font-size: 0.7rem; letter-spacing: 2px; padding: 10px 0; border-radius: 8px; transition: all 0.3s; color: var(--text-muted); text-transform: uppercase; cursor: pointer; }
+        .toggle-option.active { background: var(--text-main); color: var(--bg-color); font-weight: 600;}
+
+        /* --- PERFIL --- */
+        .profile-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; }
+        .rank-ring { width: 90px; height: 90px; border-radius: 50%; background: conic-gradient(var(--text-main) calc(var(--progress, 0) * 1%), var(--surface-color) 0); display: flex; justify-content: center; align-items: center; margin-bottom: 15px; transition: --progress 0.5s ease; }
+        .rank-inner { width: 82px; height: 82px; background: var(--bg-color); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-family: 'Noto Sans JP'; font-size: 2rem; }
+        .name-input { background: transparent; border: none; border-bottom: 1px dashed var(--text-muted); color: var(--text-main); font-family: 'Inter'; font-size: 0.9rem; text-align: center; letter-spacing: 2px; text-transform: uppercase; width: 150px; outline: none; margin-bottom: 5px; transition: border-color 0.3s; }
+        .name-input:focus { border-bottom: 1px solid var(--text-main); }
+        .profile-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 2px; }
+        .profile-exp { font-size: 0.85rem; font-weight: 300; letter-spacing: 1px; color: var(--text-muted);}
+
+        /* --- MENÚS --- */
+        .menu-section { width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); padding-bottom: 5px; border-bottom: 1px solid var(--surface-color);}
+        .btn { background: transparent; color: var(--text-main); border: 1px solid var(--glass-border); border-radius: 8px; padding: 14px; font-size: 0.85rem; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; transition: all 0.2s ease; font-family: 'Inter'; font-weight: 300; width: 100%; }
+        .btn:hover { background: var(--text-main); color: var(--bg-color); }
+        .btn-primary { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); }
+        .select-row { display: flex; gap: 10px; }
+        .select-elegant { flex: 1; background: var(--surface-color); color: var(--text-main); border: 1px solid var(--glass-border); padding: 10px; border-radius: 8px; outline: none; font-family: 'Inter'; font-size: 0.8rem; text-align: center; cursor: pointer; appearance: none; }
+
+        /* --- IN-GAME --- */
+        #top-ui { position: absolute; top: 0; width: 100%; max-width: 600px; padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; opacity: 0; transition: opacity 0.5s ease; z-index: 10; }
+        .top-controls { display: flex; justify-content: space-between; align-items: center; }
+        .text-btn { background: transparent; border: none; color: var(--text-muted); cursor: pointer; text-transform: uppercase; font-family: 'Inter'; letter-spacing: 2px; font-size: 0.75rem; transition: color 0.2s; padding: 0;}
+        .text-btn:hover { color: var(--text-main); }
+        #stats-row { display: flex; justify-content: space-between; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 2px;}
+        .stat-value { color: var(--text-main); font-weight: 600; margin-left: 8px;}
+        #health-container { width: 100%; height: 2px; background-color: var(--surface-color); }
+        #health-bar { height: 100%; width: 100%; background-color: var(--text-main); transition: width 0.3s; }
+
+        .game-wrapper { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
+        #typing-container { text-align: center; width: 90%; max-width: 450px; padding: 50px 20px; opacity: 0; transition: opacity 0.3s; pointer-events: none; position: absolute; }
+        #typing-container.active { opacity: 1; pointer-events: all; }
+
+        #kana-display { font-family: 'Noto Sans JP'; font-size: 7rem; font-weight: 100; margin-bottom: 25px; transition: color 0.2s; }
+        .vocab-mode-text { font-size: 4rem !important; letter-spacing: 5px; } 
+        
+        #time-container { width: 60%; height: 1px; background-color: var(--surface-color); margin: 0 auto 30px auto; overflow: hidden; display: none;}
+        #time-bar { height: 100%; width: 100%; background-color: var(--text-main); }
+        
+        #romaji-input { background: transparent; border: none; border-bottom: 1px solid var(--text-muted); color: var(--text-main); font-size: 1.5rem; text-align: center; width: 60%; padding: 10px; outline: none; transition: all 0.3s ease; font-family: 'Inter'; font-weight: 300; }
+        #romaji-input:focus { border-color: var(--text-main); }
+        #feedback-message { margin-top: 30px; height: 24px; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity 0.2s; }
+        
+        #translation-reveal { font-size: 1.1rem; color: var(--hint-color); margin-top: 15px; letter-spacing: 2px; text-transform: uppercase; font-weight: 300; position: absolute; width: 100%; left: 0; opacity: 0; transition: opacity 0.2s;}
+
+        /* --- TÁCTICA --- */
+        #tactical-container { width: 90%; max-width: 450px; opacity: 0; pointer-events: none; transition: opacity 0.3s; position: absolute; display: flex; flex-direction: column; align-items: center; padding: 30px 20px; }
+        #tactical-container.active { opacity: 1; pointer-events: all; }
+        .tactical-title { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 4px; }
+        .tactical-grid { display: flex; justify-content: space-between; width: 100%; gap: 15px; }
+        .tactical-col { display: flex; flex-direction: column; gap: 10px; width: 50%; }
+        .tactical-item { background: transparent; border: 1px solid var(--glass-border); padding: 15px; text-align: center; font-size: 1.5rem; cursor: pointer; transition: all 0.2s; border-radius: 8px; font-family: 'Noto Sans JP'; }
+        .romaji-item { font-family: 'Inter'; font-size: 1rem; font-weight: 300; letter-spacing: 1px; text-transform: uppercase;}
+        .tactical-item.selected { border-color: var(--text-main); background: rgba(255,255,255,0.05); }
+        .tactical-item.matched { border-color: var(--surface-color); color: var(--surface-color); pointer-events: none; }
+        .tactical-item.error { border-color: var(--error-color); color: var(--error-color); }
+
+        /* --- RESULTADOS --- */
+        .result-title { font-size: 1.5rem; font-weight: 300; letter-spacing: 8px; text-transform: uppercase; margin-bottom: 10px; }
+        .result-subtitle { color: var(--text-muted); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px;}
+        .nemesis-box { border: 1px solid rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); border-radius: 8px; padding: 25px; margin-bottom: 30px; text-align: center; max-width: 300px; }
+        .nemesis-kana { font-family: 'Noto Sans JP'; font-size: 3.5rem; font-weight: 100; line-height: 1; margin-bottom: 5px; color: var(--error-color);}
+        .nemesis-instruction { font-size: 0.75rem; color: var(--text-muted); line-height: 1.5; font-style: italic;}
+    </style>
+</head>
+<body>
+
+    <div id="start-screen" class="overlay-screen">
+        <div class="header-container">
+            <div class="title-kanji" id="main-title-kanji">平仮名</div>
+            <div class="title-sub" id="main-title-sub">Hiragana</div>
+            <!-- Toggle de 4 vías -->
+            <div class="syllabary-toggle">
+                <div class="toggle-option active" id="tog-H" onclick="setSys('H')">Hiragana</div>
+                <div class="toggle-option" id="tog-K" onclick="setSys('K')">Katakana</div>
+                <div class="toggle-option" id="tog-N" onclick="setSys('N')">Números</div>
+                <div class="toggle-option" id="tog-J" onclick="setSys('J')">Kanji N5</div>
+            </div>
+        </div>
+        
+        <div class="profile-container">
+            <div class="rank-ring" id="progress-ring">
+                <div class="rank-inner" id="profile-rank-kanji">初</div>
+            </div>
+            <input type="text" id="player-name" class="name-input" value="Jugador" onblur="saveName()" maxlength="12">
+            <div class="profile-title" id="profile-rank-name">Novato</div>
+            <div class="profile-exp" id="profile-exp-text">0 Puntos</div>
+        </div>
+
+        <div class="menu-section">
+            <div class="section-label">Aprendizaje Guiado</div>
+            <button class="btn btn-primary" onclick="startGuidedMode()" id="btn-guided">Misión 1: Iniciar</button>
+        </div>
+
+        <div class="menu-section">
+            <div class="section-label">Modo Libre</div>
+            <select id="level-select" class="select-elegant" style="margin-bottom: 10px;"></select>
+            <div class="select-row">
+                <select id="mode-select" class="select-elegant">
+                    <option value="mixed">Mixto</option>
+                    <option value="type">Solo Tecleo</option>
+                    <option value="match">Solo Unir</option>
+                </select>
+                <select id="timer-select" class="select-elegant">
+                    <option value="on">Reloj: ON</option>
+                    <option value="off">Reloj: OFF</option>
+                </select>
+            </div>
+            <button class="btn" onclick="startFreeMode()" style="margin-top: 10px;">Iniciar Práctica</button>
+        </div>
+
+        <div class="menu-section">
+            <div class="section-label">Lectura de Vocabulario</div>
+            <select id="vocab-select" class="select-elegant" style="margin-bottom: 10px;">
+                <option value="class">Salón de Clases</option>
+                <option value="fantasy">Fantasía Oscura</option>
+                <option value="poetry">Poesía y Cartas</option>
+            </select>
+            <button class="btn" onclick="startVocabMode()">Iniciar Lectura</button>
+        </div>
+    </div>
+
+    <!-- UI IN GAME Y DEMÁS PANTALLAS... -->
+    <div id="top-ui">
+        <div class="top-controls">
+            <button class="text-btn" onclick="goToMainMenu()">← Abandonar</button>
+            <button class="text-btn" id="audio-btn" onclick="toggleAudio()">Voz OFF</button>
+        </div>
+        <div id="stats-row">
+            <div id="left-stat-label">Progreso <span class="stat-value" id="score-display">0</span></div>
+            <div>Rango <span class="stat-value" id="rank-display">Novato</span></div>
+        </div>
+        <div id="health-container"><div id="health-bar"></div></div>
+    </div>
+
+    <div class="game-wrapper">
+        <div id="typing-container" class="glass-panel">
+            <div id="kana-display">あ</div>
+            <div id="time-container"><div id="time-bar"></div></div>
+            <input type="text" id="romaji-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Teclea">
+            <div id="feedback-message"></div>
+            <div id="translation-reveal">Traducción</div>
+        </div>
+        <div id="tactical-container" class="glass-panel">
+            <div class="tactical-title">Intercepción Visual</div>
+            <div class="tactical-grid">
+                <div class="tactical-col" id="col-kanas"></div>
+                <div class="tactical-col" id="col-romajis"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over-screen" class="overlay-screen hidden">
+        <div class="result-title" id="result-title">Análisis</div>
+        <div class="result-subtitle" id="result-subtitle">Entrenamiento Finalizado</div>
+        <div class="nemesis-box" id="nemesis-container" style="display: none;">
+            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--error-color); margin-bottom: 10px;">Corrección Necesaria</div>
+            <div class="nemesis-kana" id="nemesis-symbol">ね</div>
+            <div style="font-size: 1.2rem; margin-bottom: 10px; letter-spacing: 2px; text-transform: uppercase;" id="nemesis-romaji">ne</div>
+            <div class="nemesis-instruction">Toma tu pluma y ancla este trazo en papel.</div>
+        </div>
+        <button class="btn btn-primary" style="max-width: 300px;" onclick="goToMainMenu()">Panel Central</button>
+    </div>
+
+    <script>
+        const D = document;
+        
+        // --- BASE DE DATOS MAESTRA ---
+        const db = {
+            H: {
+                1: [{k:'あ',r:['a']},{k:'い',r:['i']},{k:'う',r:['u']},{k:'え',r:['e']},{k:'お',r:['o']},{k:'か',r:['ka']},{k:'き',r:['ki']},{k:'く',r:['ku']},{k:'け',r:['ke']},{k:'こ',r:['ko']},{k:'さ',r:['sa']},{k:'し',r:['shi','si']},{k:'す',r:['su']},{k:'せ',r:['se']},{k:'そ',r:['so']}],
+                2: [{k:'た',r:['ta']},{k:'ち',r:['chi','ti']},{k:'つ',r:['tsu','tu']},{k:'て',r:['te']},{k:'と',r:['to']},{k:'な',r:['na']},{k:'に',r:['ni']},{k:'ぬ',r:['nu']},{k:'ね',r:['ne']},{k:'の',r:['no']},{k:'は',r:['ha']},{k:'ひ',r:['hi']},{k:'ふ',r:['fu','hu']},{k:'へ',r:['he']},{k:'ほ',r:['ho']},{k:'ま',r:['ma']},{k:'み',r:['mi']},{k:'む',r:['mu']},{k:'め',r:['me']},{k:'も',r:['mo']}],
+                3: [{k:'や',r:['ya']},{k:'ゆ',r:['yu']},{k:'よ',r:['yo']},{k:'ら',r:['ra']},{k:'り',r:['ri']},{k:'る',r:['ru']},{k:'れ',r:['re']},{k:'ろ',r:['ro']},{k:'わ',r:['wa']},{k:'を',r:['wo','o']},{k:'ん',r:['n','nn']}],
+                5: [{k:'が',r:['ga']},{k:'ぎ',r:['gi']},{k:'ぐ',r:['gu']},{k:'げ',r:['ge']},{k:'ご',r:['go']},{k:'ざ',r:['za']},{k:'じ',r:['ji','zi']},{k:'ず',r:['zu']},{k:'ぜ',r:['ze']},{k:'ぞ',r:['zo']},{k:'だ',r:['da']},{k:'ぢ',r:['ji','di']},{k:'づ',r:['zu','du']},{k:'で',r:['de']},{k:'ど',r:['do']},{k:'ば',r:['ba']},{k:'び',r:['bi']},{k:'ぶ',r:['bu']},{k:'べ',r:['be']},{k:'ぼ',r:['bo']},{k:'ぱ',r:['pa']},{k:'ぴ',r:['pi']},{k:'ぷ',r:['pu']},{k:'ぺ',r:['pe']},{k:'ぽ',r:['po']}],
+                6: [{k:'きゃ',r:['kya']},{k:'きゅ',r:['kyu']},{k:'きょ',r:['kyo']},{k:'しゃ',r:['sha','sya']},{k:'しゅ',r:['shu','syu']},{k:'しょ',r:['sho','syo']},{k:'ちゃ',r:['cha','tya']},{k:'ちゅ',r:['chu','tyu']},{k:'ちょ',r:['cho','tyo']},{k:'にゃ',r:['nya']},{k:'にゅ',r:['nyu']},{k:'にょ',r:['nyo']},{k:'ひゃ',r:['hya']},{k:'ひゅ',r:['hyu']},{k:'ひょ',r:['hyo']},{k:'みゃ',r:['mya']},{k:'みゅ',r:['myu']},{k:'みょ',r:['myo']},{k:'りゃ',r:['rya']},{k:'りゅ',r:['ryu']},{k:'りょ',r:['ryo']},{k:'ぎゃ',r:['gya']},{k:'ぎゅ',r:['gyu']},{k:'ぎょ',r:['gyo']},{k:'じゃ',r:['ja','jya','zya']},{k:'じゅ',r:['ju','jyu','zyu']},{k:'じょ',r:['jo','jyo','zyo']},{k:'びゃ',r:['bya']},{k:'びゅ',r:['byu']},{k:'びょ',r:['byo']},{k:'ぴゃ',r:['pya']},{k:'ぴゅ',r:['pyu']},{k:'ぴょ',r:['pyo']}]
+            },
+            K: {
+                1: [{k:'ア',r:['a']},{k:'イ',r:['i']},{k:'ウ',r:['u']},{k:'エ',r:['e']},{k:'オ',r:['o']},{k:'カ',r:['ka']},{k:'キ',r:['ki']},{k:'ク',r:['ku']},{k:'ケ',r:['ke']},{k:'コ',r:['ko']},{k:'サ',r:['sa']},{k:'シ',r:['shi','si']},{k:'ス',r:['su']},{k:'セ',r:['se']},{k:'ソ',r:['so']}],
+                2: [{k:'タ',r:['ta']},{k:'チ',r:['chi','ti']},{k:'ツ',r:['tsu','tu']},{k:'テ',r:['te']},{k:'ト',r:['to']},{k:'ナ',r:['na']},{k:'ニ',r:['ni']},{k:'ヌ',r:['nu']},{k:'ネ',r:['ne']},{k:'ノ',r:['no']},{k:'ハ',r:['ha']},{k:'ヒ',r:['hi']},{k:'フ',r:['fu','hu']},{k:'ヘ',r:['he']},{k:'ホ',r:['ho']},{k:'マ',r:['ma']},{k:'ミ',r:['mi']},{k:'ム',r:['mu']},{k:'メ',r:['me']},{k:'モ',r:['mo']}],
+                3: [{k:'ヤ',r:['ya']},{k:'ユ',r:['yu']},{k:'ヨ',r:['yo']},{k:'ラ',r:['ra']},{k:'リ',r:['ri']},{k:'ル',r:['ru']},{k:'レ',r:['re']},{k:'ロ',r:['ro']},{k:'ワ',r:['wa']},{k:'ヲ',r:['wo','o']},{k:'ン',r:['n','nn']}],
+                5: [{k:'ガ',r:['ga']},{k:'ギ',r:['gi']},{k:'グ',r:['gu']},{k:'ゲ',r:['ge']},{k:'ゴ',r:['go']},{k:'ザ',r:['za']},{k:'ジ',r:['ji','zi']},{k:'ズ',r:['zu']},{k:'ゼ',r:['ze']},{k:'ゾ',r:['zo']},{k:'ダ',r:['da']},{k:'ヂ',r:['ji','di']},{k:'ヅ',r:['zu','du']},{k:'デ',r:['de']},{k:'ド',r:['do']},{k:'バ',r:['ba']},{k:'ビ',r:['bi']},{k:'ブ',r:['bu']},{k:'ベ',r:['be']},{k:'ボ',r:['bo']},{k:'パ',r:['pa']},{k:'ピ',r:['pi']},{k:'プ',r:['pu']},{k:'ペ',r:['pe']},{k:'ポ',r:['po']}],
+                6: [{k:'キャ',r:['kya']},{k:'キュ',r:['kyu']},{k:'キョ',r:['kyo']},{k:'シャ',r:['sha','sya']},{k:'シュ',r:['shu','syu']},{k:'ショ',r:['sho','syo']},{k:'チャ',r:['cha','tya']},{k:'チュ',r:['chu','tyu']},{k:'チョ',r:['cho','tyo']},{k:'ニャ',r:['nya']},{k:'ニュ',r:['nyu']},{k:'ニョ',r:['nyo']},{k:'ヒャ',r:['hya']},{k:'ヒュ',r:['hyu']},{k:'ヒョ',r:['hyo']},{k:'ミャ',r:['mya']},{k:'ミュ',r:['myu']},{k:'ミョ',r:['myo']},{k:'リャ',r:['rya']},{k:'リュ',r:['ryu']},{k:'リョ',r:['ryo']},{k:'ギャ',r:['gya']},{k:'ギュ',r:['gyu']},{k:'ギョ',r:['gyo']},{k:'ジャ',r:['ja','jya','zya']},{k:'ジュ',r:['ju','jyu','zyu']},{k:'ジョ',r:['jo','jyo','zyo']},{k:'ビャ',r:['bya']},{k:'ビュ',r:['byu']},{k:'ビョ',r:['byo']},{k:'ピャ',r:['pya']},{k:'ピュ',r:['pyu']},{k:'ピョ',r:['pyo']}]
+            },
+            N: {
+                1: [{k:'一',r:['ichi'],t:'Uno'},{k:'二',r:['ni'],t:'Dos'},{k:'三',r:['san'],t:'Tres'},{k:'四',r:['shi','yon'],t:'Cuatro'},{k:'五',r:['go'],t:'Cinco'}],
+                2: [{k:'六',r:['roku'],t:'Seis'},{k:'七',r:['shichi','nana'],t:'Siete'},{k:'八',r:['hachi'],t:'Ocho'},{k:'九',r:['kyuu','ku'],t:'Nueve'},{k:'十',r:['juu'],t:'Diez'}],
+                3: [{k:'百',r:['hyaku'],t:'Cien'},{k:'千',r:['sen'],t:'Mil'},{k:'万',r:['man'],t:'Diez Mil'}]
+            },
+            J: {
+                1: [{k:'日',r:['hi','nichi','jitsu'],t:'Sol / Día'},{k:'月',r:['tsuki','getsu','gatsu'],t:'Luna / Mes'},{k:'火',r:['hi','ka'],t:'Fuego'},{k:'水',r:['mizu','sui'],t:'Agua'},{k:'木',r:['ki','moku'],t:'Madera / Árbol'},{k:'金',r:['kane','kin'],t:'Oro / Dinero'},{k:'土',r:['tsuchi','do'],t:'Tierra'}],
+                2: [{k:'山',r:['yama','san'],t:'Montaña'},{k:'川',r:['kawa','sen'],t:'Río'},{k:'田',r:['ta','da','den'],t:'Arrozal'},{k:'石',r:['ishi','seki'],t:'Piedra'},{k:'花',r:['hana','ka'],t:'Flor'}],
+                3: [{k:'人',r:['hito','jin','nin'],t:'Persona'},{k:'目',r:['me','moku'],t:'Ojo'},{k:'口',r:['kuchi','kou'],t:'Boca'},{k:'耳',r:['mimi','ji'],t:'Oreja'},{k:'手',r:['te','shu'],t:'Mano'},{k:'足',r:['ashi','soku'],t:'Pie / Pierna'}]
+            }
+        };
+
+        const vocabData = {
+            class: [{k:'せんせい',r:['sensei'],t:'Profesor'},{k:'がくせい',r:['gakusei'],t:'Estudiante'},{k:'なまえ',r:['namae'],t:'Nombre'},{k:'ほん',r:['hon'],t:'Libro'},{k:'えんぴつ',r:['enpitsu'],t:'Lápiz'},{k:'つくえ',r:['tsukue'],t:'Escritorio'}],
+            fantasy: [{k:'けん',r:['ken'],t:'Espada'},{k:'きし',r:['kishi'],t:'Caballero'},{k:'りゅう',r:['ryuu'],t:'Dragón'},{k:'まほう',r:['mahou'],t:'Magia'},{k:'たて',r:['tate'],t:'Escudo'},{k:'し',r:['shi'],t:'Muerte'}],
+            poetry: [{k:'こころ',r:['kokoro'],t:'Corazón'},{k:'あい',r:['ai'],t:'Amor'},{k:'ほのか',r:['honoka'],t:'Sutil'},{k:'ゆめ',r:['yume'],t:'Sueño'},{k:'てがみ',r:['tegami'],t:'Carta'},{k:'ほし',r:['hoshi'],t:'Estrella'}]
+        };
+
+        const configSys = {
+            H: { title: '平仮名', sub: 'Hiragana', stages: [
+                {id:1, name:"Misión 1: Básicos", levels:[1], goal:20, reward:50}, {id:2, name:"Misión 2: Táctico", levels:[1,2], goal:25, reward:80},
+                {id:3, name:"Misión 3: Expansión", levels:[1,2,3], goal:35, reward:120}, {id:4, name:"Misión 4: Dakuten", levels:[5], goal:40, reward:150},
+                {id:5, name:"Misión 5: Yōon", levels:[6], goal:45, reward:200}, {id:6, name:"Misión Final", levels:[1,2,3,5,6], goal:80, reward:400}]
+            },
+            K: { title: '片仮名', sub: 'Katakana', stages: [
+                {id:1, name:"Misión 1: Básicos", levels:[1], goal:20, reward:50}, {id:2, name:"Misión 2: Táctico", levels:[1,2], goal:25, reward:80},
+                {id:3, name:"Misión 3: Expansión", levels:[1,2,3], goal:35, reward:120}, {id:4, name:"Misión 4: Dakuten", levels:[5], goal:40, reward:150},
+                {id:5, name:"Misión 5: Yōon", levels:[6], goal:45, reward:200}, {id:6, name:"Misión Final", levels:[1,2,3,5,6], goal:80, reward:400}]
+            },
+            N: { title: '数字', sub: 'Números', stages: [
+                {id:1, name:"Misión 1: 1 al 5", levels:[1], goal:15, reward:60}, {id:2, name:"Misión 2: 6 al 10", levels:[2], goal:15, reward:80},
+                {id:3, name:"Misión Final: Escala", levels:[1,2,3], goal:30, reward:200}]
+            },
+            J: { title: '漢字', sub: 'Kanji N5', stages: [
+                {id:1, name:"Misión 1: Elementos", levels:[1], goal:20, reward:80}, {id:2, name:"Misión 2: Naturaleza", levels:[1,2], goal:25, reward:120},
+                {id:3, name:"Misión Final: Seres", levels:[1,2,3], goal:40, reward:300}]
+            }
+        };
+
+        let sys = 'H'; // H, K, N, J
+        let userProfile = { name: "Jugador", exp: 0, stageH: 1, stageK: 1, stageN: 1, stageJ: 1, nemesisTracking: {} };
+
+        function loadSave() {
+            const saved = localStorage.getItem('kanaDojoV10');
+            if (saved) { userProfile = { ...userProfile, ...JSON.parse(saved) }; }
+            D.getElementById('player-name').value = userProfile.name;
+            setSys('H'); // Inicializa UI
+        }
+        function saveProgress() { localStorage.setItem('kanaDojoV10', JSON.stringify(userProfile)); updateProfileUI(); }
+        function saveName() { let val = D.getElementById('player-name').value.trim(); userProfile.name = val === '' ? "Jugador" : val; saveProgress(); }
+
+        const rankMilestones = [
+            { name: "Novato", kanji: "初", req: 0 }, { name: "Aprendiz", kanji: "見", req: 200 },
+            { name: "Hábil", kanji: "上", req: 500 }, { name: "Experto", kanji: "達", req: 1000 },
+            { name: "Maestro", kanji: "名", req: 2000 }, { name: "Leyenda", kanji: "伝", req: 4000 }
+        ];
+
+        function getCurrentRank() {
+            let current = rankMilestones[0]; let next = rankMilestones[1];
+            for (let i = 0; i < rankMilestones.length; i++) { if (userProfile.exp >= rankMilestones[i].req) { current = rankMilestones[i]; next = rankMilestones[i+1] || current; } }
+            return { current, next };
+        }
+
+        function updateProfileUI() {
+            const ranks = getCurrentRank();
+            D.getElementById('profile-rank-kanji').textContent = ranks.current.kanji;
+            D.getElementById('profile-rank-name').textContent = ranks.current.name;
+            D.getElementById('profile-exp-text').textContent = userProfile.exp + " Puntos";
+            
+            let progress = 100;
+            if (ranks.current !== ranks.next) {
+                let range = ranks.next.req - ranks.current.req; let currentProg = userProfile.exp - ranks.current.req;
+                progress = Math.min(100, Math.max(0, (currentProg / range) * 100));
+            }
+            D.getElementById('progress-ring').style.setProperty('--progress', progress);
+            
+            let stageKey = 'stage' + sys; let currentStage = userProfile[stageKey];
+            const stage = configSys[sys].stages.find(s => s.id === currentStage);
+            const btn = D.getElementById('btn-guided');
+            if(stage) { btn.textContent = `${stage.name} (Meta: ${stage.goal})`; btn.style.display = 'block'; } else btn.style.display = 'none';
+        }
+
+        function setSys(newSys) {
+            sys = newSys;
+            ['H','K','N','J'].forEach(s => D.getElementById('tog-'+s).classList.toggle('active', s === sys));
+            D.getElementById('main-title-kanji').textContent = configSys[sys].title;
+            D.getElementById('main-title-sub').textContent = configSys[sys].sub;
+            
+            // Actualizar Opciones del Modo Libre
+            const ls = D.getElementById('level-select'); ls.innerHTML = '';
+            if(sys === 'H' || sys === 'K') {
+                ls.innerHTML = `<option value="1">Nivel 1: A, K, S</option><option value="2">Nivel 2: T, N, H, M</option><option value="3">Nivel 3: Y, R, W, N</option><option value="4">Nivel 4: Básico</option><option value="5">Nivel 5: Dakuten</option><option value="6">Nivel 6: Combos</option><option value="7">Nivel 7: Maestro</option>`;
+            } else if (sys === 'N') {
+                ls.innerHTML = `<option value="1">Nivel 1: 1 al 5</option><option value="2">Nivel 2: 6 al 10</option><option value="3">Nivel 3: 100+</option><option value="4">Maestro Numérico</option>`;
+            } else if (sys === 'J') {
+                ls.innerHTML = `<option value="1">Nivel 1: Elementos</option><option value="2">Nivel 2: Naturaleza</option><option value="3">Nivel 3: Seres</option><option value="4">Maestro Kanji</option>`;
+            }
+            updateProfileUI();
+        }
+
+        let activeData = []; let curObj = null; let isGuided = false; let activeGoal = 0; let isVocab = false;
+        let gameCfg = { mode: 'mixed', timer: true }; let cScore = 0; let health = 100; let mistakes = 0; let streak = 0;
+        let audioOn = false; const DMG = 20; const T_LIMIT = 3500; let tOut; // T_LIMIT un poco más permisivo para pensar en romaji de kanjis
+
+        function toggleAudio() {
+            audioOn = !audioOn; const btn = D.getElementById('audio-btn');
+            btn.textContent = audioOn ? "Voz ON" : "Voz OFF"; btn.style.color = audioOn ? "var(--text-main)" : "var(--text-muted)";
+            if(audioOn) window.speechSynthesis.speak(new SpeechSynthesisUtterance("")); 
+        }
+
+        function playAudio(text) {
+            if (!audioOn) return; window.speechSynthesis.cancel(); 
+            const utt = new SpeechSynthesisUtterance(text); utt.lang = 'ja-JP'; utt.rate = isVocab ? 0.8 : 0.9;
+            window.speechSynthesis.speak(utt);
+        }
+
+        function buildData(levelsArray) {
+            let data = []; const dict = db[sys];
+            levelsArray.forEach(l => { if(dict[l]) data = data.concat(dict[l]); });
+            return JSON.parse(JSON.stringify(data)).map(k => ({...k, weight: 10, sessionFails: 0}));
+        }
+
+        function buildVocabList(category) { return JSON.parse(JSON.stringify(vocabData[category])).map(k => ({...k, weight: 10, sessionFails: 0})); }
+
+        function startGuidedMode() {
+            let sKey = 'stage' + sys; let curS = userProfile[sKey];
+            const stage = configSys[sys].stages.find(s => s.id === curS); if(!stage) return;
+            isGuided = true; isVocab = false; activeGoal = stage.goal; gameCfg = { mode: 'mixed', timer: true };
+            activeData = buildData(stage.levels);
+            D.getElementById('kana-display').classList.remove('vocab-mode-text');
+            D.getElementById('left-stat-label').innerHTML = `Progreso <span class="stat-value" id="score-display">0 / ${activeGoal}</span>`;
+            initGame();
+        }
+
+        function startFreeMode() {
+            isGuided = false; isVocab = false; let lvl = parseInt(D.getElementById('level-select').value);
+            let lvls = (sys==='H'||sys==='K') ? (lvl===4?[1,2,3]:lvl===7?[1,2,3,5,6]:[lvl]) : (lvl===4?[1,2,3]:[lvl]);
+            gameCfg.mode = D.getElementById('mode-select').value; gameCfg.timer = D.getElementById('timer-select').value === 'on';
+            activeData = buildData(lvls);
+            D.getElementById('kana-display').classList.remove('vocab-mode-text');
+            D.getElementById('left-stat-label').innerHTML = `Aciertos <span class="stat-value" id="score-display">0</span>`;
+            initGame();
+        }
+
+        function startVocabMode() {
+            isGuided = false; isVocab = true; let cat = D.getElementById('vocab-select').value;
+            gameCfg = { mode: 'type', timer: false }; activeData = buildVocabList(cat);
+            D.getElementById('kana-display').classList.add('vocab-mode-text');
+            D.getElementById('left-stat-label').innerHTML = `Aciertos <span class="stat-value" id="score-display">0</span>`;
+            initGame();
+        }
+
+        function initGame() {
+            cScore = 0; health = 100; streak = 0; updateInGameUI();
+            D.getElementById('start-screen').classList.add('hidden'); D.getElementById('top-ui').style.opacity = '1';
+            if (gameCfg.mode === 'match') startTac(); else switchType();
+        }
+
+        function goToMainMenu() {
+            clearTimeout(tOut); D.getElementById('game-over-screen').classList.add('hidden');
+            D.getElementById('top-ui').style.opacity = '0'; D.getElementById('typing-container').classList.remove('active'); D.getElementById('tactical-container').classList.remove('active');
+            saveProgress(); setTimeout(() => D.getElementById('start-screen').classList.remove('hidden'), 300);
+        }
+
+        function updateInGameUI() {
+            D.getElementById('score-display').textContent = isGuided ? `${cScore} / ${activeGoal}` : cScore;
+            D.getElementById('rank-display').textContent = getCurrentRank().current.name;
+            const hb = D.getElementById('health-bar'); hb.style.width = health + '%';
+            hb.style.backgroundColor = health > 50 ? 'var(--text-main)' : health > 20 ? 'var(--hint-color)' : 'var(--error-color)';
+        }
+
+        function getWRK() {
+            let tw = activeData.reduce((s, k) => s + k.weight, 0); let r = Math.random() * tw;
+            for (let i = 0; i < activeData.length; i++) {
+                if (r < activeData[i].weight) {
+                    if(activeData.length > 1 && curObj && activeData[i].k === curObj.k) return getWRK();
+                    return activeData[i];
+                }
+                r -= activeData[i].weight;
+            }
+            return activeData[0];
+        }
+
+        // --- GAME FEEL ---
+        function triggerShake() { const c = D.getElementById('typing-container'); c.classList.remove('shake-effect'); void c.offsetWidth; c.classList.add('shake-effect'); setTimeout(() => c.classList.remove('shake-effect'), 300); }
+        function triggerPop() { const d = D.getElementById('kana-display'); d.classList.remove('pop-effect'); void d.offsetWidth; d.classList.add('pop-effect'); }
+
+        function switchType() {
+            D.getElementById('tactical-container').classList.remove('active'); D.getElementById('typing-container').classList.add('active');
+            D.getElementById('time-container').style.display = gameCfg.timer ? 'block' : 'none';
+            D.getElementById('translation-reveal').style.opacity = '0';
+            setTimeout(() => D.getElementById('romaji-input').focus(), 100); loadNext();
+        }
+
+        function loadNext() {
+            curObj = getWRK();
+            D.getElementById('kana-display').textContent = curObj.k; D.getElementById('kana-display').style.color = 'var(--text-main)';
+            D.getElementById('romaji-input').value = ''; mistakes = 0; D.getElementById('feedback-message').style.opacity = '0';
+            D.getElementById('translation-reveal').style.opacity = '0';
+            playAudio(curObj.k); if(gameCfg.timer) startTimer();
+        }
+
+        function startTimer() {
+            clearTimeout(tOut); const tb = D.getElementById('time-bar');
+            tb.style.transition = 'none'; tb.style.width = '100%'; void tb.offsetWidth; 
+            tb.style.transition = `width ${T_LIMIT}ms linear`; tb.style.width = '0%';
+            tOut = setTimeout(() => { takeDmg(DMG, 'Lento'); if (health > 0) startTimer(); }, T_LIMIT);
+        }
+
+        function takeDmg(amt, txt) {
+            health = Math.max(0, health - amt); mistakes++; streak = 0; triggerShake();
+            if(curObj) { curObj.weight += 15; curObj.sessionFails += 1; userProfile.nemesisTracking[curObj.k] = (userProfile.nemesisTracking[curObj.k] || 0) + 1; }
+            updateInGameUI();
+            if (health === 0) { clearTimeout(tOut); triggerRes("Análisis Crítico", "Sistema Comprometido"); } 
+            else {
+                // Hint logic: either show translation as hint or romaji
+                let hintTxt = (sys === 'N' || sys === 'J') ? curObj.r[0] + " / " + curObj.t : curObj.r[0];
+                if (mistakes >= 3 && curObj) showFb(false, `Pista: ${hintTxt}`);
+                else showFb(false, txt);
+                D.getElementById('romaji-input').value = '';
+            }
+        }
+
+        function showFb(isC, txt) {
+            const fm = D.getElementById('feedback-message'); fm.style.opacity = '1'; fm.textContent = txt || (isC ? 'Preciso' : 'Error');
+            fm.style.color = isC ? 'var(--text-main)' : 'var(--error-color)';
+            if(D.getElementById('typing-container').classList.contains('active') && !isC) D.getElementById('kana-display').style.color = 'var(--error-color)';
+        }
+
+        D.getElementById('romaji-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const ans = this.value.trim().toLowerCase(); if (ans === '') return;
+                if (curObj.r.includes(ans) || (curObj.t && curObj.t.toLowerCase().includes(ans))) { // Acepta Romaji o Traducción
+                    clearTimeout(tOut);
+                    if (mistakes < 3) { cScore++; health = Math.min(100, health + 2); streak++; curObj.weight = Math.max(2, curObj.weight - 3); checkWin(); }
+                    if(health > 0 && !D.getElementById('game-over-screen').classList.contains('hidden') === false) {
+                        updateInGameUI(); showFb(true); triggerPop(); 
+
+                        // Revelar traducción dinámicamente si existe (Vocab, Kanji o Num)
+                        if (curObj.t) {
+                            const tr = D.getElementById('translation-reveal'); tr.textContent = curObj.t; tr.style.opacity = '1';
+                            setTimeout(loadNext, 1000); // Dar tiempo a leer
+                        } else {
+                            if (gameCfg.mode === 'mixed' && streak >= 5) { streak = 0; setTimeout(startTac, 300); } 
+                            else setTimeout(loadNext, 200); 
+                        }
+                    }
+                } else takeDmg(DMG, 'Error de Trazo');
+            }
+        });
+
+        // --- TÁCTICA ---
+        let tacPairs = []; let sK = null; let sR = null; let mDone = 0;
+        function shf(arr) { return arr.sort(() => Math.random() - 0.5); }
+
+        function startTac() {
+            clearTimeout(tOut); D.getElementById('typing-container').classList.remove('active');
+            setTimeout(() => { D.getElementById('tactical-container').classList.add('active'); bldTac(); }, 300);
+        }
+
+        function bldTac() {
+            const cK = D.getElementById('col-kanas'); const cR = D.getElementById('col-romajis');
+            cK.innerHTML = ''; cR.innerHTML = ''; mDone = 0; sK = null; sR = null; tacPairs = []; let tArr = [...activeData];
+            for(let i=0; i<4; i++) { if(tArr.length === 0) break; tArr.sort((a,b) => b.weight - a.weight); tacPairs.push(tArr.shift()); }
+            let nK = []; let nR = [];
+            tacPairs.forEach((p, i) => {
+                let kNode = D.createElement('div'); kNode.className = 'tactical-item kana-item'; kNode.textContent = p.k; kNode.dataset.id = i; kNode.onclick = () => hTac('kana', kNode, i); nK.push(kNode);
+                let rNode = D.createElement('div'); rNode.className = 'tactical-item romaji-item'; rNode.textContent = p.r[0]; rNode.dataset.id = i; rNode.onclick = () => hTac('romaji', rNode, i); nR.push(rNode);
+            });
+            shf(nK).forEach(n => cK.appendChild(n)); shf(nR).forEach(n => cR.appendChild(n));
+        }
+
+        function hTac(type, node, id) {
+            D.querySelectorAll(`.${type}-item`).forEach(el => el.classList.remove('selected')); node.classList.add('selected');
+            if (type === 'kana') { sK = { node, id }; playAudio(node.textContent); } else sR = { node, id };
+            if (sK && sR) {
+                if (sK.id === sR.id) {
+                    sK.node.classList.replace('selected', 'matched'); sR.node.classList.replace('selected', 'matched'); cScore++; updateInGameUI(); mDone++; checkWin();
+                    if (mDone === tacPairs.length && health > 0) { health = Math.min(100, health + 10); updateInGameUI(); if (gameCfg.mode === 'mixed') setTimeout(switchType, 800); else if (gameCfg.mode === 'match') setTimeout(startTac, 800); }
+                } else {
+                    sK.node.classList.replace('selected', 'error'); sR.node.classList.replace('selected', 'error'); health = Math.max(0, health - 10); updateInGameUI();
+                    setTimeout(() => { sK.node.classList.remove('error'); sR.node.classList.remove('error'); }, 400);
+                }
+                sK = null; sR = null;
+            }
+        }
+
+        function checkWin() {
+            if(isGuided && cScore >= activeGoal) {
+                let sKey = 'stage' + sys; const sObj = configSys[sys].stages.find(s => s.id === userProfile[sKey]);
+                userProfile.exp += sObj.reward; userProfile[sKey]++; saveProgress();
+                triggerRes("Misión Superada", `+${sObj.reward} Puntos Asignados.`);
+            }
+        }
+
+        function triggerRes(title, sub) {
+            D.getElementById('result-title').textContent = title; D.getElementById('result-title').style.color = title.includes("Superada") ? "var(--text-main)" : "var(--error-color)"; D.getElementById('result-subtitle').textContent = sub;
+            let nem = activeData.reduce((m, o) => o.sessionFails > m.sessionFails ? o : m, activeData[0]);
+            const nB = D.getElementById('nemesis-container');
+            if (nem && nem.sessionFails > 0) { D.getElementById('nemesis-symbol').textContent = nem.k; D.getElementById('nemesis-romaji').textContent = nem.r[0]; nB.style.display = 'block'; } else nB.style.display = 'none'; 
+            D.getElementById('game-over-screen').classList.remove('hidden'); D.getElementById('typing-container').classList.remove('active'); D.getElementById('tactical-container').classList.remove('active');
+        }
+
+        D.addEventListener('click', (e) => { if (D.getElementById('typing-container').classList.contains('active') && e.target.tagName !== 'BUTTON') D.getElementById('romaji-input').focus(); });
+        loadSave();
+    </script>
+</body>
+</html>
