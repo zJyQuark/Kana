@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dojo-v3';
+const CACHE_NAME = 'dojo-v4';
 const urlsToCache = [
   './',
   './index.html',
