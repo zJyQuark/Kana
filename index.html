@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kana Dojo - N5 Bridge Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;300;400&family=Inter:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#030303">
     <style>
         :root {
             --bg-color: #030303;
@@ -530,6 +532,13 @@
 
         D.addEventListener('click', (e) => { if (D.getElementById('typing-container').classList.contains('active') && e.target.tagName !== 'BUTTON') D.getElementById('romaji-input').focus(); });
         loadSave();
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js');
+            });
+        }
     </script>
 </body>
 </html>
